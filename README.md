@@ -1,0 +1,1 @@
+# friday_assistant_py

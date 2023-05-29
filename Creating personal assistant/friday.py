@@ -1,3 +1,4 @@
+from dis import Instruction
 import speech_recognition as sr
 import pyttsx3
 import pywhatkit
@@ -13,7 +14,7 @@ def talk(text):
     machine.say(text)
     machine.runAndWait()
 
-def input_instruction():
+def listen_instruction():
     instruction = "" # Initialize with a default value
     try:
         with sr.Microphone() as source:
@@ -24,8 +25,10 @@ def input_instruction():
             if "friday" in instruction:
                 instruction = instruction.replace('friday', "")
                 print(instruction)
-    except:
-        pass
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand. Please try again.")
+    except sr.RequestError:
+        print("Sorry, there was an issue with the speech recognition service.")
     return instruction
 
 def generate_chat_response(input_text):
@@ -40,7 +43,7 @@ def generate_chat_response(input_text):
     return response.choices[0].text.strip()
 
 def play_friday():
-    instruction = input_instruction()
+    instruction = listen_instruction()
     print(instruction)
 
     if "play" in instruction:
@@ -59,19 +62,42 @@ def play_friday():
         print("Current date: " + current_date)
 
     elif 'what is your name' in instruction:
-        talk("I am Friday, what can I do for you?")
+        talk("I am Friday, your personal assistant. How can I assist you?")
 
     elif 'who is' in instruction:
-        human = instruction.replace('who is', '')
-        info = wikipedia.summary(human, 1)
+        person = instruction.replace('who is', '')
+        info = wikipedia.summary(person, sentences=1)
         print(info)
         talk(info)
+
+    elif 'search' in instruction:
+        search_query = instruction.replace('search', '')
+        talk("Searching for " + search_query)
+        pywhatkit.search(search_query)
+
+    elif 'stop' in instruction or 'exit' in instruction:
+        talk("Goodbye!")
+        return False
 
     else:
         # Generate response using ChatGPT
         response = generate_chat_response(instruction)
         talk(response)
         print(response)
-i=10
-while(i!=0):
-    play_friday()
+
+    return True
+
+while True:
+    if not play_friday():
+        break
+
+
+
+
+
+
+
+
+
+
+

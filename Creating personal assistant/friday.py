@@ -79,11 +79,12 @@ def play_friday():
         talk("Goodbye!")
         return False
 
+
     else:
         # Generate response using ChatGPT
         response = generate_chat_response(instruction)
-        talk(response)
-        print(response)
+        talk(response.txt)
+        print(response.txt)
 
     return True
 

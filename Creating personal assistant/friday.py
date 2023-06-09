@@ -14,7 +14,6 @@ from pygame import mixer
 from random import randint
 import webbrowser
 import random
-from friday_gui import *
 
 listener = sr.Recognizer()
 machine = pyttsx3.init()

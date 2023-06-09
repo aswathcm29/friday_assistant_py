@@ -13,6 +13,8 @@ from scipy.spatial import distance
 from pygame import mixer
 from random import randint
 import webbrowser
+import random
+from friday_gui import *
 
 listener = sr.Recognizer()
 machine = pyttsx3.init()
@@ -105,8 +107,6 @@ def drowsiness_detector():
     cv2.destroyAllWindows()
 
 
-
-
 def get_random_joke():
     jokes = [
         "Why don't scientists trust atoms? Because they make up everything!",
@@ -138,18 +138,34 @@ def play_friday():
     elif 'what is your name' in instruction:
         talk("I am Friday, your personal assistant. How can I assist you?")
 
-    elif "tell me a joke" in instruction:
-        # Generate a random joke
-        joke = get_random_joke()
-        talk(joke)
-        print(joke)
-
 
     elif "weather" in instruction:
         search_term = instruction.split("for")[-1]
         url = "https://www.google.com/search?sxsrf=ACYBGNSQwMLDByBwdVFIUCbQqya-ET7AAA%3A1578847393212&ei=oUwbXtbXDN-C4-EP-5u82AE&q=weather&oq=weather&gs_l=psy-ab.3..35i39i285i70i256j0i67l4j0i131i67j0i131j0i67l2j0.1630.4591..5475...1.2..2.322.1659.9j5j0j1......0....1..gws-wiz.....10..0i71j35i39j35i362i39._5eSPD47bv8&ved=0ahUKEwiWrJvwwP7mAhVfwTgGHfsNDxsQ4dUDCAs&uact=5"
         webbrowser.get().open(url)
         talk("Here is what I found for on google")
+
+
+    elif ("tell me a joke" or "joke") in instruction:
+        joke = get_random_joke()
+        talk(joke)
+        print(joke)
+
+    elif 'open google maps' in instruction:
+        talk("Opening Google Maps")
+        webbrowser.open("https://www.google.com/maps")    
+
+    elif 'search for' in instruction:
+        location = instruction.replace('search for', '').strip()
+        search_query = "https://www.google.com/maps/search/" + location.replace(' ', '+')
+        talk("Searching for " + location + " on Google Maps")
+        webbrowser.open(search_query)
+    
+    elif 'toss a coin' in instruction:
+        coin = random.choice(['Heads', 'Tails'])
+        talk("I tossed a coin and it landed on " + coin)
+        print("Coin landed on: " + coin)
+
 
     elif 'who is' in instruction:
         person = instruction.replace('who is', '')
